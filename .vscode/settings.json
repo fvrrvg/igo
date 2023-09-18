@@ -1,0 +1,21 @@
+{
+    "editor.formatOnSave": true,
+    "go.formatTool": "goimports",
+    "[go]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        }
+    },
+    "[go.mod]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        }
+    },
+    "gopls": {
+        "formatting.gofumpt": true
+    },
+    "go.toolsManagement.autoUpdate": true,
+    "go.vetOnSave": "package",
+}

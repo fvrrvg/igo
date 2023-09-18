@@ -1,0 +1,130 @@
+project_name: igo
+
+before:
+  hooks:
+    - go mod download
+
+env:
+  - CGO_ENABLED=0
+  - COSIGN_YES=true
+
+report_sizes: true
+
+builds:
+  - id: binary-linux
+    main: ./
+    binary: "{{ .ProjectName }}"
+    flags:
+      - -trimpath
+      - -mod=readonly
+    goos:
+      - linux
+    goarch:
+      - amd64
+
+  - id: binary-darwin
+    main: ./
+    binary: "{{ .ProjectName }}"
+    flags:
+      - -trimpath
+      - -mod=readonly
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+  - id: binary-windows
+    main: ./
+    binary: "{{ .ProjectName }}"
+    flags:
+      - -trimpath
+      - -buildmode=pie
+      - -mod=readonly
+    goos:
+      - windows
+    goarch:
+      - amd64
+
+nfpms:
+  - id: deb
+    package_name: "{{ .ProjectName }}"
+    vendor: Fvrrvg
+    homepage: https://github.com/fvrrvg/igo
+    maintainer: fvrrvg <fvrrvg@gmail.com>
+    description: A CLI for Instagram built in Go. Helps you do some tasks faster and easier like downloading posts, stories, IGTV, and DMs.
+    license: MIT
+    formats:
+      - deb
+      - rpm
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-dev"
+
+archives:
+  - id: archive-unix
+    format: tar.gz
+    builds:
+      - binary-linux
+      - binary-darwin
+    name_template: "{{ .ProjectName }}-v{{ .Version }}.{{ .Os }}.{{ .Arch }}"
+
+  - id: archive-windows
+    format: zip
+    builds:
+      - binary-windows
+    name_template: "{{ .ProjectName }}-v{{ .Version }}.{{ .Os }}"
+
+checksum:
+  name_template: "{{ .ProjectName }}-v{{ .Version }}.checksums.txt"
+  algorithm: sha256
+  ids:
+    - archive-unix
+    - archive-windows
+
+changelog:
+  use: github-native
+
+release:
+  prerelease: auto
+  header: |
+    ## Installation
+
+    To install `{{ .ProjectName }}`, download one of the pre-built binaries provided for your platform from the artifacts attached to this release.
+
+    For instance, if you are using Linux on an AMD64 architecture:
+
+    ```shell
+    # Download the binary
+    curl -LO https://github.com/fvrrvg/{{ .ProjectName }}/releases/download/{{ .Tag }}/{{ .ProjectName }}-v{{ .Version }}.linux.amd64.tar.gz
+
+    # Extract the tar
+    tar -xzf {{ .ProjectName }}-v{{ .Version }}.linux.amd64.tar.gz
+
+    # Move the binary in to your PATH
+    mv {{ .ProjectName }}-v{{ .Version }}.linux.amd64 /usr/local/bin/{{ .ProjectName }}
+
+    # Make the binary executable
+    chmod +x /usr/local/bin/{{ .ProjectName }}
+    ```
+
+    ### Verify checksums file signature
+
+    ```shell
+    # Download the checksums file, certificate and signature
+    curl -LO https://github.com/fvrrvg/{{ .ProjectName }}/releases/download/{{ .Tag }}/{{ .ProjectName }}-v{{ .Version }}.checksums.txt
+
+    # Verify the checksums file
+    cosign verify-blob {{ .ProjectName }}-v{{ .Version }}.checksums.txt \
+      --certificate-identity-regexp=https://github.com/fvrrvg \
+      --certificate-oidc-issuer=https://token.actions.githubusercontent.com
+    ```
+
+    ### Verify binary integrity
+
+    To verify the integrity of the downloaded binary, you can utilize the checksums file after having validated its signature:
+
+    ```shell
+    # Verify the binary using the checksums file
+    sha256sum -c {{ .ProjectName }}-v{{ .Version }}.checksums.txt --ignore-missing
+    ```
