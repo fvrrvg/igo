@@ -218,6 +218,16 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 		},
 	}
 
+	downloadCmd := &cobra.Command{
+		Use:   "download",
+		Short: "Download post,iptv or reel by entering the url.",
+		Long:  `Download post,iptv or reel by entering the url.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			urlFlag := cmd.Flag("url").Value.String()
+			parts.Download(insta, urlFlag)
+		},
+	}
+
 	rootCmd.SetHelpCommand(&cobra.Command{Hidden: true})
 	rootCmd.DisableSuggestions = false
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
@@ -231,11 +241,13 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 	var jsonFlag bool
 	var latestFlag bool
 	var notverifiedFlag bool
+	var urlFlag string
 
 	rootCmd.PersistentFlags().StringVarP(&username, "username", "u", "", "Username of the user you want to perform tasks on.")
 	notfollowingbackCmd.Flags().BoolVarP(&jsonFlag, "json", "j", false, "Export the users that don't follow you back in JSON format.")
 	notfollowingbackCmd.Flags().BoolVarP(&notverifiedFlag, "exclude-verified", "e", false, "Exclude verified users from the list.")
 	downloadpostsCmd.Flags().BoolVarP(&latestFlag, "latest", "l", false, "Download latest post only")
+	downloadCmd.Flags().StringVarP(&urlFlag, "url", "", "", "Url of the post,igtv or reel you want to download.")
 
 	rootCmd.AddCommand(followCmd)
 	rootCmd.AddCommand(unfollowCmd)
@@ -250,6 +262,7 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 	rootCmd.AddCommand(myCmd)
 	rootCmd.AddCommand(downloadhighlightsCmd)
 	rootCmd.AddCommand(whoamiCmd)
+	rootCmd.AddCommand(downloadCmd)
 
 	cc.Init(&cc.Config{
 		RootCmd:  rootCmd,

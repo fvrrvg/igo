@@ -65,7 +65,7 @@ func ConfigFile() string {
 	}
 
 	if os.PathSeparator == '\\' {
-		return filepath.Join(home, "AppData", "Local", "wordy")
+		return filepath.Join(home, "AppData", "Local", "igo")
 	} else {
 		return filepath.Join(home, ".config", "igo")
 	}

@@ -58,9 +58,7 @@ func GetAllPosts(u *goinsta.User, flag bool) {
 		fmt.Println()
 
 	} else {
-		profile.Feed.Next()
-
-		if len(profile.Feed.Items) == 0 {
+		if len(profile.Feed.Latest()) == 0 {
 			fmt.Println(utils.Red("This account has no posts"))
 			fmt.Println()
 

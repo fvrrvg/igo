@@ -58,6 +58,7 @@ igo [command]
 - `follow`: Follow a user.
 - `unfollow`: Unfollow a user.
 - `whoami`: Get your account's info.
+- `download`: Download a post, reel, IGTV just by using the url.
 
 #### Available Flags
 
@@ -74,6 +75,10 @@ igo [command]
 
 - `--json/-j`: Export the users that don't follow you back in JSON format.
 - `--exclude-verfied/-e`: Exclude verified users from the list.
+
+##### Flags for `download` command
+
+- `--url`: The url of the post, reel, IGTV you want to download.
 
 ### 🙌 Achnowledgements
 
