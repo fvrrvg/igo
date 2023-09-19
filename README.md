@@ -76,10 +76,6 @@ igo [command]
 - `--json/-j`: Export the users that don't follow you back in JSON format.
 - `--exclude-verfied/-e`: Exclude verified users from the list.
 
-##### Flags for `download` command
-
-- `--url`: The url of the post, reel, IGTV you want to download.
-
 ### 🙌 Achnowledgements
 
 This project wouldn't be possible without the existance of this amazing project:

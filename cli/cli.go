@@ -223,8 +223,15 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 		Short: "Download post,iptv or reel by entering the url.",
 		Long:  `Download post,iptv or reel by entering the url.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			urlFlag := cmd.Flag("url").Value.String()
-			parts.Download(insta, urlFlag)
+			if len(args) == 0 {
+				fmt.Println(utils.Red("You have to enter a url!"))
+				fmt.Println("igo download url")
+			} else if len(args) == 1 {
+				parts.Download(insta, args[0])
+			} else {
+				fmt.Println(utils.Red("You have to enter a url!"))
+				fmt.Println("igo download url")
+			}
 		},
 	}
 
@@ -241,13 +248,11 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 	var jsonFlag bool
 	var latestFlag bool
 	var notverifiedFlag bool
-	var urlFlag string
 
 	rootCmd.PersistentFlags().StringVarP(&username, "username", "u", "", "Username of the user you want to perform tasks on.")
 	notfollowingbackCmd.Flags().BoolVarP(&jsonFlag, "json", "j", false, "Export the users that don't follow you back in JSON format.")
 	notfollowingbackCmd.Flags().BoolVarP(&notverifiedFlag, "exclude-verified", "e", false, "Exclude verified users from the list.")
 	downloadpostsCmd.Flags().BoolVarP(&latestFlag, "latest", "l", false, "Download latest post only")
-	downloadCmd.Flags().StringVarP(&urlFlag, "url", "", "", "Url of the post,igtv or reel you want to download.")
 
 	rootCmd.AddCommand(followCmd)
 	rootCmd.AddCommand(unfollowCmd)
@@ -276,7 +281,7 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 	rootCmd.Root().Example = `  igo follow -u username 
   igo unfollow -u username
   igo everything -u username
-  igo nfb`
+  igo nfb --exlude-verified`
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

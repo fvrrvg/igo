@@ -16,12 +16,13 @@ import (
 func Download(insta *goinsta.Instagram, url string) {
 	fmt.Println(utils.Yellow("Downloading..."))
 
-	if url == "" {
-		fmt.Println(utils.Red("You have to enter a url!"))
-		fmt.Println("igo download --url url")
-
+	// check if url is valid
+	if !strings.Contains(url, "instagram.com/") {
+		fmt.Println(utils.Red("Invalid URL!"))
+		fmt.Println("igo download https://www.instagram.com/...")
 		return
 	}
+
 	code := ExtractCode(url)
 
 	if len(code) > 12 {
