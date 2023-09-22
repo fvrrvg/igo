@@ -1,9 +1,9 @@
 package main
 
 import (
-	"igo/cli"
+	"igo/cmd"
 )
 
 func main() {
-	cli.StartCli()
+	cmd.StartCli()
 }

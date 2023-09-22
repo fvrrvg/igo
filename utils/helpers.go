@@ -6,8 +6,10 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/Davincible/goinsta/v3"
+	"github.com/briandowns/spinner"
 	"github.com/eiannone/keyboard"
 	"github.com/fatih/color"
 	"github.com/gosuri/uilive"
@@ -112,7 +114,6 @@ func SearchMenu(query string, insta *goinsta.Instagram) *goinsta.User {
 		fmt.Println()
 		fmt.Print(Green("Navigation: Up/Down Arrow Keys\n"))
 		fmt.Print(Green("Enter: to Select a user\n"))
-		// fmt.Print(Green("L: Load more users\n"))
 		fmt.Println(Green("Q: Quit\n"))
 		fmt.Println()
 
@@ -138,4 +139,9 @@ func SearchMenu(query string, insta *goinsta.Instagram) *goinsta.User {
 
 	os.Exit(0)
 	return nil
+}
+
+func GetSpinner() *spinner.Spinner {
+	S := spinner.New(spinner.CharSets[26], 100*time.Millisecond)
+	return S
 }

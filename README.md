@@ -53,19 +53,30 @@ igo [command]
 - `highlights`: Download the Highlights of a user.
 - `pp`: Download profile picture of a user.
 - `logout`: Logout from your account.
-- `my`: Download your own posts, stories, IGTV, Highlights.
+- `my`: Download your own posts, stories, IGTV, Highlights, and Saved Collections.
 - `nfb`: Get the users that don't follow you back.
 - `follow`: Follow a user.
 - `unfollow`: Unfollow a user.
 - `whoami`: Get your account's info.
 - `download`: Download a post, reel, IGTV just by using the url.
 
+##### Subcommands for `my` command
+
+- `posts`: Download your posts.
+- `stories`: Download your stories.
+- `igtv`: Download your IGTVs.
+- `highlights`: Download your Highlights.
+- `saved`: Download your Saved Collections.
+
 #### Available Flags
 
 ##### Global Flags
 
 - `--help/-h`: Help for igo.
-- `--username/-u`: Username of the user you want to perform tasks on.
+
+##### Flags for `follow, unfollow, pp, posts, stories, igtv, highlights, dms` commands
+
+- `--username/-u`: Username of the user you want to do the action on.
 
 ##### Flags for `posts` command
 

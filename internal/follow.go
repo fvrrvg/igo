@@ -1,4 +1,4 @@
-package parts
+package internal
 
 import (
 	"encoding/json"
@@ -233,7 +233,6 @@ func createUnfollowTable(insta *goinsta.Instagram, users []string) {
 		fmt.Println()
 		fmt.Print(utils.Green("Navigation: Up/Down Arrow Keys\n"))
 		fmt.Print(utils.Green("Enter: Unfollow the selected user\n"))
-		fmt.Print(utils.Green("A: Unfollow all the users\n"))
 		fmt.Print(utils.Green("Q: Quit\n"))
 
 		char, key, err := keyboard.GetKey()
@@ -250,19 +249,9 @@ func createUnfollowTable(insta *goinsta.Instagram, users []string) {
 		} else if key == keyboard.KeyEnter {
 			Unfollow(insta, users[currentIndex])
 			users[currentIndex] = utils.Green(users[currentIndex]) + utils.Green(" (Unfollowed Successfully)")
-		} else if char == 'a' || char == 'A' {
-			fmt.Print(utils.Red("Press 'a' again to confirm and unfollow all users . "))
-			char2, _, _ := keyboard.GetSingleKey()
-			if char2 == 'a' || char2 == 'A' {
-				for _, user := range users {
-					if currentIndex%10 == 0 {
-						time.Sleep(5 * time.Second)
-					}
-					Unfollow(insta, user)
-					users[currentIndex] = utils.Green(users[currentIndex]) + utils.Green(" (Unfollowed Successfully)")
-				}
-			}
 		} else if char == 'q' || char == 'Q' {
+			quit = true
+		} else if key == keyboard.KeyCtrlC {
 			quit = true
 		}
 

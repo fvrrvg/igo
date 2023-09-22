@@ -1,10 +1,10 @@
-package cli
+package cmd
 
 import (
 	"fmt"
 	"os"
 
-	"igo/parts"
+	"igo/internal"
 	"igo/utils"
 
 	"github.com/Davincible/goinsta/v3"
@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var insta *goinsta.Instagram = parts.Login()
+var insta *goinsta.Instagram = internal.Login()
 
 func downloadPosts(username string, latest bool) {
 	if username == "" {
@@ -22,9 +22,9 @@ func downloadPosts(username string, latest bool) {
 	}
 
 	if !latest {
-		parts.GetAllPosts(utils.GetUser(insta, username), true)
+		internal.GetAllPosts(utils.GetUser(insta, username), true)
 	} else {
-		parts.GetAllPosts(utils.GetUser(insta, username), false)
+		internal.GetAllPosts(utils.GetUser(insta, username), false)
 	}
 }
 
@@ -53,7 +53,7 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 
 				os.Exit(1)
 			}
-			parts.Follow(insta, username)
+			internal.Follow(insta, username)
 		},
 	}
 
@@ -68,7 +68,7 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 
 				os.Exit(1)
 			}
-			parts.Unfollow(insta, username)
+			internal.Unfollow(insta, username)
 		},
 	}
 
@@ -83,9 +83,20 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 
 				os.Exit(1)
 			}
-			parts.GetStories(utils.GetUser(insta, username))
+			internal.GetStories(utils.GetUser(insta, username))
 		},
 	}
+
+	StoriesNowCmd := &cobra.Command{
+		Use:   "now",
+		Short: "Download the stories that are posted now.",
+		Long:  `Download the stories that are posted now.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			internal.GetStoriesNow(insta)
+		},
+	}
+
+	downloadstoriesCmd.AddCommand(StoriesNowCmd)
 
 	downloadigtvCmd := &cobra.Command{
 		Use:   "igtv",
@@ -99,7 +110,7 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 				os.Exit(1)
 			}
 
-			parts.GetAllIgtv(utils.GetUser(insta, username))
+			internal.GetAllIgtv(utils.GetUser(insta, username))
 		},
 	}
 
@@ -115,7 +126,7 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 				os.Exit(1)
 			}
 
-			parts.GetAllHighlights(utils.GetUser(insta, username))
+			internal.GetAllHighlights(utils.GetUser(insta, username))
 		},
 	}
 
@@ -124,7 +135,7 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 		Short: "Logout from your account.",
 		Long:  `Logout from your account.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			parts.Logout()
+			internal.Logout()
 		},
 	}
 
@@ -139,7 +150,7 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 
 				os.Exit(1)
 			}
-			parts.GetDMS(insta, utils.GetUser(insta, username))
+			internal.GetDMS(insta, utils.GetUser(insta, username))
 		},
 	}
 
@@ -154,7 +165,7 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 
 				os.Exit(1)
 			}
-			parts.GetProfilePic(utils.GetUser(insta, username))
+			internal.GetProfilePic(utils.GetUser(insta, username))
 		},
 	}
 
@@ -179,12 +190,14 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 				fmt.Println("igo everything -u username")
 				os.Exit(1)
 			}
-			downloadstoriesCmd.Run(cmd, args)
-			downloadPosts(username, true)
-			downloadigtvCmd.Run(cmd, args)
-			dmsCmd.Run(cmd, args)
-			ppCmd.Run(cmd, args)
-			downloadhighlightsCmd.Run(cmd, args)
+
+			u := utils.GetUser(insta, username)
+			internal.GetStories(u)
+			internal.GetAllPosts(u, false)
+			internal.GetAllIgtv(u)
+			internal.GetDMS(insta, u)
+			internal.GetProfilePic(u)
+			internal.GetAllHighlights(u)
 		},
 	}
 
@@ -196,25 +209,92 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 			jsonflag := cmd.Flag("json").Value.String()
 			notverifiedflag := cmd.Flag("exclude-verified").Value.String()
 
-			parts.NotFollowingBack(insta, jsonflag, notverifiedflag)
+			internal.NotFollowingBack(insta, jsonflag, notverifiedflag)
 		},
 	}
 
 	myCmd := &cobra.Command{
 		Use:   "my",
-		Short: "Download your own posts, stories, IGTV, Highlights",
-		Long:  `Download your own posts, stories, IGTV, Highlights`,
+		Short: "Download your own posts, stories, IGTV, Highlights, Saved Collections",
+		Long:  `Download your own posts, stories, IGTV, Highlights, Saved Collections`,
 		Run: func(cmd *cobra.Command, args []string) {
-			parts.My(insta)
+			internal.MyPosts(insta)
+			internal.MyStories(insta)
+			internal.MyIGTV(insta)
+			internal.MyHL(insta)
+			internal.MyCollections(insta)
+			internal.MyPP(insta)
 		},
 	}
+
+	MyPostCmd := &cobra.Command{
+		Use:   "posts",
+		Short: "Download your own posts.",
+		Long:  `Download your own posts.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			internal.MyPosts(insta)
+		},
+	}
+
+	MyStoriesCmd := &cobra.Command{
+		Use:   "stories",
+		Short: "Download your own stories.",
+		Long:  `Download your own stories.`,
+
+		Run: func(cmd *cobra.Command, args []string) {
+			internal.MyStories(insta)
+		},
+	}
+
+	MyIGTVCmd := &cobra.Command{
+		Use:   "igtv",
+		Short: "Download your own IGTVs.",
+		Long:  `Download your own IGTVs.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			internal.MyIGTV(insta)
+		},
+	}
+
+	MyHLCmd := &cobra.Command{
+		Use:   "highlights",
+		Short: "Download your own Highlights.",
+		Long:  `Download your own Highlights.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			internal.MyHL(insta)
+		},
+	}
+
+	MyCollectionsCmd := &cobra.Command{
+		Use:   "saved",
+		Short: "Download your own Saved Collections.",
+		Long:  `Download your own Saved Collections.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			internal.MyCollections(insta)
+		},
+	}
+
+	MyPPCmd := &cobra.Command{
+		Use:   "pp",
+		Short: "Download your own profile picture.",
+		Long:  `Download your own profile picture.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			internal.MyPP(insta)
+		},
+	}
+
+	myCmd.AddCommand(MyPostCmd)
+	myCmd.AddCommand(MyStoriesCmd)
+	myCmd.AddCommand(MyIGTVCmd)
+	myCmd.AddCommand(MyHLCmd)
+	myCmd.AddCommand(MyCollectionsCmd)
+	myCmd.AddCommand(MyPPCmd)
 
 	whoamiCmd := &cobra.Command{
 		Use:   "whoami",
 		Short: "Get your account's info.",
 		Long:  `Get your account's info.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			parts.Whoami(insta)
+			internal.Whoami(insta)
 		},
 	}
 
@@ -227,7 +307,7 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 				fmt.Println(utils.Red("You have to enter a url!"))
 				fmt.Println("igo download url")
 			} else if len(args) == 1 {
-				parts.Download(insta, args[0])
+				internal.Download(insta, args[0])
 			} else {
 				fmt.Println(utils.Red("You have to enter a url!"))
 				fmt.Println("igo download url")
@@ -249,10 +329,18 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 	var latestFlag bool
 	var notverifiedFlag bool
 
-	rootCmd.PersistentFlags().StringVarP(&username, "username", "u", "", "Username of the user you want to perform tasks on.")
 	notfollowingbackCmd.Flags().BoolVarP(&jsonFlag, "json", "j", false, "Export the users that don't follow you back in JSON format.")
 	notfollowingbackCmd.Flags().BoolVarP(&notverifiedFlag, "exclude-verified", "e", false, "Exclude verified users from the list.")
 	downloadpostsCmd.Flags().BoolVarP(&latestFlag, "latest", "l", false, "Download latest post only")
+	followCmd.Flags().StringVarP(&username, "username", "u", "", "Username of the user you want to follow.")
+	unfollowCmd.Flags().StringVarP(&username, "username", "u", "", "Username of the user you want to unfollow.")
+	downloadstoriesCmd.Flags().StringVarP(&username, "username", "u", "", "Username of the user you want to download the stories of.")
+	downloadigtvCmd.Flags().StringVarP(&username, "username", "u", "", "Username of the user you want to download the IGTVs of.")
+	downloadhighlightsCmd.Flags().StringVarP(&username, "username", "u", "", "Username of the user you want to download the Highlights of.")
+	dmsCmd.Flags().StringVarP(&username, "username", "u", "", "Username of the user you want to download the DMs with.")
+	ppCmd.Flags().StringVarP(&username, "username", "u", "", "Username of the user you want to download the profile picture of.")
+	downloadpostsCmd.Flags().StringVarP(&username, "username", "u", "", "Username of the user you want to download the posts of.")
+	everythingCmd.Flags().StringVarP(&username, "username", "u", "", "Username of the user you want to download everything of.")
 
 	rootCmd.AddCommand(followCmd)
 	rootCmd.AddCommand(unfollowCmd)
@@ -278,7 +366,7 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 		Flags:    cc.HiRed + cc.Bold,
 	})
 
-	rootCmd.Root().Example = `  igo follow -u username 
+	rootCmd.Root().Example = `  igo follow -u username
   igo unfollow -u username
   igo everything -u username
   igo nfb --exlude-verified`

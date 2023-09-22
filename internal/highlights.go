@@ -1,4 +1,4 @@
-package parts
+package internal
 
 import (
 	"fmt"
@@ -22,7 +22,7 @@ func GetAllHighlights(u *goinsta.User) {
 		panic(err)
 	}
 
-	finalDir := utils.GetCurrDir() + "/" + u.Username + "/Highlights"
+	finalDir := utils.GetCurrDir() + "/" + u.Username + "/Highlights/"
 
 	if !profile.Friendship.Following && u.IsPrivate {
 		fmt.Println(utils.Red("This account is private and you are not following it!"))
