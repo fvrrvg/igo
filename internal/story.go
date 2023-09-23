@@ -79,7 +79,6 @@ func GetStoriesNow(insta *goinsta.Instagram) {
 }
 
 func StoriesMenu(list []string) []string {
-	fmt.Println(utils.Yellow("Choose Stories to download (toggle selection with Space):"))
 	fmt.Print("\033[H\033[2J")
 	currentIndex := 0
 	pageSize := 10
@@ -128,8 +127,8 @@ func StoriesMenu(list []string) []string {
 
 		fmt.Println()
 		fmt.Print(utils.Green("Navigation: Up/Down Arrow Keys\n"))
-		fmt.Print(utils.Green("Space: Toggle collection selection\n"))
-		fmt.Print(utils.Green("Enter: Confirm selected collections\n"))
+		fmt.Print(utils.Green("Space: Toggle story selection\n"))
+		fmt.Print(utils.Green("Enter: Confirm selected stories\n"))
 		fmt.Print(utils.Green("Q: Quit\n"))
 		fmt.Println()
 
