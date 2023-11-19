@@ -23,6 +23,12 @@ brew tap fvrrvg/tap
 brew install igo
 ```
 
+### 📦 Installation via Go
+
+```sh
+go install github.com/fvrrvg/igo@latest
+```
+
 ### 🛠️ Build & Run locally
 
 Install [Go](https://golang.org/doc/install) first and run the following commands:
