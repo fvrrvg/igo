@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"igo/utils"
+	"github.com/fvrrvg/igo/utils"
 
 	"github.com/Davincible/goinsta/v3"
 	"github.com/PuerkitoBio/goquery"

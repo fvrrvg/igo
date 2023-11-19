@@ -1,7 +1,7 @@
 package main
 
 import (
-	"igo/cmd"
+	"github.com/fvrrvg/igo/cmd"
 )
 
 func main() {

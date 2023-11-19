@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"igo/utils"
+	"github.com/fvrrvg/igo/utils"
 
 	"github.com/Davincible/goinsta/v3"
 )

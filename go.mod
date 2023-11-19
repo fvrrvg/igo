@@ -1,4 +1,4 @@
-module igo
+module github.com/fvrrvg/igo
 
 go 1.21.0
 

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"igo/internal"
-	"igo/utils"
+	"github.com/fvrrvg/igo/internal"
+	"github.com/fvrrvg/igo/utils"
 
 	"github.com/Davincible/goinsta/v3"
 	cc "github.com/ivanpirog/coloredcobra"
