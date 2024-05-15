@@ -182,8 +182,8 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 
 	everythingCmd := &cobra.Command{
 		Use:   "everything",
-		Short: "Download everything. (PP, Posts, Stories, IGTV, and DMS)",
-		Long:  `Download everything (PP, Posts, Stories, IGTV, and DMS) by entering their username.`,
+		Short: "Download everything. (PP, Posts, Stories and IGTV)",
+		Long:  `Download everything (PP, Posts, Stories and IGTV) by entering their username.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			if cmd.Flag("username").Value.String() == "" {
 				fmt.Println(utils.Red("You have to enter a username!"))
@@ -195,7 +195,6 @@ Helps you do some tasks faster and easier like downloading posts, stories, IGTV,
 			internal.GetStories(u)
 			internal.GetAllPosts(u, false)
 			internal.GetAllIgtv(u)
-			internal.GetDMS(insta, u)
 			internal.GetProfilePic(u)
 			internal.GetAllHighlights(u)
 		},

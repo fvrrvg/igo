@@ -29,7 +29,7 @@ brew install igo
 go install github.com/fvrrvg/igo@latest
 ```
 
-### 🛠️ Build & Run locally
+### 🛠️ Install Manually
 
 Install [Go](https://golang.org/doc/install) first and run the following commands:
 
